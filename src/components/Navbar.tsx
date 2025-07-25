@@ -6,6 +6,9 @@ const Navbar: React.FC = () => {
   const navigate = useNavigate();
   const location = useLocation();
 
+  // Mock coin data - in a real app this would come from state management
+  const userCoins = 125;
+
   const handleLogoClick = () => {
     navigate('/');
   };
@@ -41,6 +44,14 @@ const Navbar: React.FC = () => {
         </div>
         
         <div className="navbar-actions">
+          <div className="coin-counter">
+            <div className="coin-icon">🪙</div>
+            <div className="coin-info">
+              <span className="coin-amount">{userCoins}</span>
+              <span className="coin-label">coins</span>
+            </div>
+          </div>
+          
           <div className="user-profile">
             <div className="avatar">👤</div>
             <div className="user-info">

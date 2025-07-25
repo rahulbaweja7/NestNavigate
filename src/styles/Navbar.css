@@ -93,6 +93,60 @@
 .navbar-actions {
   display: flex;
   align-items: center;
+  gap: 1rem;
+}
+
+/* Coin Counter */
+.coin-counter {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.5rem 1rem;
+  background: linear-gradient(135deg, #fef3c7 0%, #fde68a 100%);
+  border-radius: 25px;
+  border: 2px solid #f59e0b;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  box-shadow: 0 2px 8px rgba(251, 191, 36, 0.2);
+}
+
+.coin-counter:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(251, 191, 36, 0.3);
+  background: linear-gradient(135deg, #fef3c7 0%, #fbbf24 100%);
+}
+
+.coin-icon {
+  font-size: 1.2rem;
+  animation: coin-shine 2s ease-in-out infinite;
+}
+
+.coin-info {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  line-height: 1;
+}
+
+.coin-amount {
+  font-size: 1rem;
+  font-weight: 800;
+  color: #000000 !important;
+  line-height: 1;
+}
+
+.coin-label {
+  font-size: 0.7rem;
+  font-weight: 700;
+  color: #374151;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  line-height: 1;
+}
+
+@keyframes coin-shine {
+  0%, 100% { transform: scale(1) rotate(0deg); }
+  50% { transform: scale(1.1) rotate(5deg); }
 }
 
 .user-profile {
@@ -185,6 +239,26 @@
     display: block;
   }
   
+  .navbar-actions {
+    gap: 0.5rem;
+  }
+  
+  .coin-counter {
+    padding: 0.375rem 0.75rem;
+  }
+  
+  .coin-icon {
+    font-size: 1rem;
+  }
+  
+  .coin-amount {
+    font-size: 0.9rem;
+  }
+  
+  .coin-label {
+    font-size: 0.65rem;
+  }
+  
   .user-profile {
     padding: 0.375rem 0.75rem;
   }
@@ -215,6 +289,14 @@
   
   .brand-logo {
     font-size: 1.5rem;
+  }
+  
+  .coin-counter {
+    padding: 0.25rem 0.5rem;
+  }
+  
+  .coin-info {
+    display: none;
   }
   
   .user-info {
