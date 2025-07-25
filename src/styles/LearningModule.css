@@ -1,0 +1,224 @@
+.learning-module-page {
+  min-height: calc(100vh - 70px);
+  background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+  padding-top: 2rem;
+}
+
+/* Module Main */
+.module-main {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 2rem;
+}
+
+/* Lesson Content */
+.lesson-content {
+  max-width: 800px;
+  margin: 0 auto;
+  background: white;
+  border-radius: 20px;
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+  overflow: hidden;
+}
+
+.lesson-header {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: white;
+  padding: 2rem;
+  text-align: center;
+}
+
+.lesson-header h2 {
+  font-size: 1.8rem;
+  font-weight: 600;
+  margin: 0 0 1rem 0;
+}
+
+.lesson-progress {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.lesson-progress span {
+  font-size: 0.9rem;
+  font-weight: 500;
+  opacity: 0.9;
+}
+
+.lesson-progress-bar {
+  width: 200px;
+  height: 6px;
+  background: rgba(255, 255, 255, 0.2);
+  border-radius: 3px;
+  overflow: hidden;
+}
+
+.lesson-progress-fill {
+  height: 100%;
+  background: #4ade80;
+  border-radius: 3px;
+  transition: width 0.3s ease;
+}
+
+/* Lesson Body */
+.lesson-body {
+  padding: 2rem;
+}
+
+.lesson-section {
+  margin-bottom: 2rem;
+}
+
+.lesson-section:last-child {
+  margin-bottom: 0;
+}
+
+.lesson-section h3 {
+  font-size: 1.3rem;
+  font-weight: 600;
+  color: #2d3748;
+  margin-bottom: 1rem;
+}
+
+.lesson-section p {
+  color: #4a5568;
+  line-height: 1.6;
+  margin-bottom: 1rem;
+}
+
+.lesson-section ul {
+  color: #4a5568;
+  line-height: 1.6;
+  padding-left: 1.5rem;
+}
+
+.lesson-section li {
+  margin-bottom: 0.5rem;
+}
+
+/* Inspection Checklist */
+.inspection-checklist {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 1rem;
+  margin-top: 1rem;
+}
+
+.checklist-item {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 1rem;
+  background: #f7fafc;
+  border-radius: 12px;
+  border: 1px solid #e2e8f0;
+  transition: all 0.3s ease;
+}
+
+.checklist-item:hover {
+  background: #edf2f7;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+.checklist-icon {
+  font-size: 1.5rem;
+}
+
+.checklist-item span:last-child {
+  font-weight: 500;
+  color: #2d3748;
+}
+
+/* Lesson Actions */
+.lesson-actions {
+  display: flex;
+  gap: 1rem;
+  padding: 2rem;
+  background: #f8fafc;
+  border-top: 1px solid #e2e8f0;
+}
+
+.lesson-btn {
+  flex: 1;
+  padding: 1rem 1.5rem;
+  font-size: 1rem;
+  font-weight: 600;
+  border: none;
+  border-radius: 12px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.lesson-btn.primary {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: white;
+  box-shadow: 0 4px 15px rgba(102, 126, 234, 0.3);
+}
+
+.lesson-btn.primary:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 25px rgba(102, 126, 234, 0.4);
+}
+
+.lesson-btn.secondary {
+  background: white;
+  color: #667eea;
+  border: 2px solid #667eea;
+}
+
+.lesson-btn.secondary:hover {
+  background: #667eea;
+  color: white;
+  transform: translateY(-2px);
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .learning-module-page {
+    min-height: calc(100vh - 60px);
+    padding-top: 1rem;
+  }
+  
+  .module-main {
+    padding: 0 1rem;
+  }
+  
+  .lesson-header {
+    padding: 1.5rem;
+  }
+  
+  .lesson-header h2 {
+    font-size: 1.5rem;
+  }
+  
+  .lesson-body {
+    padding: 1.5rem;
+  }
+  
+  .lesson-actions {
+    padding: 1.5rem;
+    flex-direction: column;
+  }
+  
+  .inspection-checklist {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 480px) {
+  .lesson-header h2 {
+    font-size: 1.3rem;
+  }
+  
+  .lesson-section h3 {
+    font-size: 1.2rem;
+  }
+  
+  .lesson-btn {
+    padding: 0.875rem 1rem;
+    font-size: 0.9rem;
+  }
+} 
