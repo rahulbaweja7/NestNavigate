@@ -33,6 +33,8 @@ const LearningModule: React.FC<LearningModuleProps> = ({
     "Red Flags to Watch For"
   ];
 
+  const lessonCoins = [10, 15, 25]; // Coins earned per lesson
+
   const handleStartModule = () => {
     setCurrentView('selection');
   };
@@ -55,11 +57,11 @@ const LearningModule: React.FC<LearningModuleProps> = ({
       }
     }
     
-    // Set completion data
+    // Set completion data with lesson-specific coins
     setCompletionData({
       lessonNumber: currentLesson,
       lessonTitle: lessonTitles[currentLesson - 1],
-      coinsEarned: 15 // Each lesson gives 15 coins
+      coinsEarned: lessonCoins[currentLesson - 1]
     });
     
     setShowCompletion(true);

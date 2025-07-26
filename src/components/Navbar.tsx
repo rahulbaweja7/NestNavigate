@@ -4,23 +4,15 @@ import '../styles/Navbar.css';
 
 interface NavbarProps {
   userCoins?: number;
-  onResetProgress?: () => void;
 }
 
-const Navbar: React.FC<NavbarProps> = ({ userCoins = 0, onResetProgress }) => {
+const Navbar: React.FC<NavbarProps> = ({ userCoins = 0 }) => {
   const navigate = useNavigate();
   const location = useLocation();
-  const [showSettings, setShowSettings] = useState(false);
 
   const handleLogoClick = () => { navigate('/'); };
   const handleModuleClick = () => { navigate('/modules'); };
-  
-  const handleResetProgress = () => {
-    if (onResetProgress && window.confirm('Are you sure you want to reset all your progress? This action cannot be undone.')) {
-      onResetProgress();
-      setShowSettings(false);
-    }
-  };
+  const handleSettingsClick = () => { navigate('/settings'); };
 
   return (
     <nav className="navbar">
@@ -65,23 +57,13 @@ const Navbar: React.FC<NavbarProps> = ({ userCoins = 0, onResetProgress }) => {
             </div>
           </div>
           
-          <div className="settings-dropdown">
+          <div className="settings-button">
             <button 
               className="settings-toggle"
-              onClick={() => setShowSettings(!showSettings)}
+              onClick={handleSettingsClick}
             >
               ⚙️
             </button>
-            {showSettings && (
-              <div className="settings-menu">
-                <button 
-                  className="settings-item"
-                  onClick={handleResetProgress}
-                >
-                  🔄 Reset Progress
-                </button>
-              </div>
-            )}
           </div>
         </div>
       </div>

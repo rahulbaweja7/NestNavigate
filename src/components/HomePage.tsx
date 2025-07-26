@@ -9,6 +9,10 @@ const HomePage: React.FC = () => {
     navigate('/modules');
   };
 
+  const handleStartModule = () => {
+    navigate('/module');
+  };
+
   return (
     <div className="home-page">
       <div className="hero-section">
@@ -60,7 +64,7 @@ const HomePage: React.FC = () => {
             </div>
             <button 
               className="module-card-btn"
-              onClick={handleStartLearning}
+              onClick={handleStartModule}
             >
               Start Module
             </button>

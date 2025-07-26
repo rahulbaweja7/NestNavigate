@@ -148,17 +148,27 @@
 }
 
 .duration {
-  font-size: 0.85rem;
   color: #718096;
+  font-size: 0.875rem;
   font-weight: 500;
+}
+
+.coins-reward {
+  color: #f59e0b;
+  font-size: 0.875rem;
+  font-weight: 600;
+  background: #fef3c7;
+  padding: 0.25rem 0.5rem;
+  border-radius: 6px;
+  border: 1px solid #fde68a;
 }
 
 .completed-badge {
   background: #10b981;
   color: white;
   padding: 0.25rem 0.75rem;
-  border-radius: 15px;
-  font-size: 0.8rem;
+  border-radius: 20px;
+  font-size: 0.75rem;
   font-weight: 600;
 }
 

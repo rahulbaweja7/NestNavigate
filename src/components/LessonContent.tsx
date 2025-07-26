@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import '../styles/LessonContent.css';
 
 interface LessonContentProps {
@@ -63,6 +63,64 @@ const LessonContent: React.FC<LessonContentProps> = ({
   const [completedSections, setCompletedSections] = useState<number[]>([]);
   const [clickedItems, setClickedItems] = useState<Set<number>>(new Set());
   const [showInteractiveFeedback, setShowInteractiveFeedback] = useState(false);
+  
+  // Matching state
+  const [matchedPairs, setMatchedPairs] = useState<Set<number>>(new Set());
+  const [selectedLeft, setSelectedLeft] = useState<number | null>(null);
+  const [selectedRight, setSelectedRight] = useState<number | null>(null);
+  const [wrongSelection, setWrongSelection] = useState<boolean>(false);
+  const [shuffledRightOrder, setShuffledRightOrder] = useState<number[]>([]);
+
+  // Initialize shuffled order when component mounts or section changes
+  useEffect(() => {
+    const currentSectionData = lessons[currentLesson - 1]?.content.sections[currentSection];
+    if (currentSectionData?.type === 'interactive' && 
+        currentSectionData.interactiveElement?.type === 'drag' && 
+        currentSectionData.interactiveElement.data.pairs) {
+      const pairs = currentSectionData.interactiveElement.data.pairs;
+      
+      // Create a more randomized shuffle
+      const indices = Array.from({ length: pairs.length }, (_, i) => i);
+      const shuffled = [];
+      
+      while (indices.length > 0) {
+        const randomIndex = Math.floor(Math.random() * indices.length);
+        shuffled.push(indices.splice(randomIndex, 1)[0]);
+      }
+      
+      // Ensure it's not in the same order as original
+      const isSameOrder = shuffled.every((val, index) => val === index);
+      if (isSameOrder && shuffled.length > 1) {
+        // If it's the same order, swap the first two elements
+        [shuffled[0], shuffled[1]] = [shuffled[1], shuffled[0]];
+      }
+      
+      setShuffledRightOrder(shuffled);
+    }
+  }, [currentLesson, currentSection]);
+
+  // Check for matches
+  useEffect(() => {
+    if (selectedLeft !== null && selectedRight !== null) {
+      // Get the original index from the shuffled order for the right selection
+      const originalRightIndex = shuffledRightOrder[selectedRight];
+      
+      if (selectedLeft === originalRightIndex) {
+        setMatchedPairs(prev => new Set([...prev, selectedLeft]));
+        setSelectedLeft(null);
+        setSelectedRight(null);
+        setWrongSelection(false);
+      } else {
+        // Wrong match, show feedback and reset after a delay
+        setWrongSelection(true);
+        setTimeout(() => {
+          setSelectedLeft(null);
+          setSelectedRight(null);
+          setWrongSelection(false);
+        }, 1500);
+      }
+    }
+  }, [selectedLeft, selectedRight, shuffledRightOrder]);
 
   const lessons: Lesson[] = [
     {
@@ -162,7 +220,7 @@ const LessonContent: React.FC<LessonContentProps> = ({
           },
           {
             title: "Interactive Matching",
-            content: "Match the inspection type with its purpose:",
+            content: "Match the inspection type with its purpose by clicking on corresponding items:",
             type: "interactive",
             interactiveElement: {
               type: "drag",
@@ -288,6 +346,10 @@ const LessonContent: React.FC<LessonContentProps> = ({
       // Reset interactive state for new section
       setClickedItems(new Set());
       setShowInteractiveFeedback(false);
+      setMatchedPairs(new Set());
+      setSelectedLeft(null);
+      setSelectedRight(null);
+      setShuffledRightOrder([]);
     } else {
       setShowQuiz(true);
     }
@@ -305,6 +367,10 @@ const LessonContent: React.FC<LessonContentProps> = ({
       // Reset interactive state for new section
       setClickedItems(new Set());
       setShowInteractiveFeedback(false);
+      setMatchedPairs(new Set());
+      setSelectedLeft(null);
+      setSelectedRight(null);
+      setShuffledRightOrder([]);
     }
   };
 
@@ -406,6 +472,195 @@ const LessonContent: React.FC<LessonContentProps> = ({
                   <p>
                     <strong>Tip:</strong> Home inspectors focus on structural and safety-related components, 
                     not cosmetic details like paint colors or furniture arrangement.
+                  </p>
+                </div>
+              </div>
+            </div>
+          )}
+        </div>
+      );
+    }
+
+    if (type === 'drag' && data.pairs) {
+      const handleLeftClick = (index: number) => {
+        if (matchedPairs.has(index)) return;
+        setSelectedLeft(selectedLeft === index ? null : index);
+      };
+
+      const handleRightClick = (displayIndex: number) => {
+        // Get the original index from the shuffled order
+        const originalIndex = shuffledRightOrder[displayIndex];
+        if (matchedPairs.has(originalIndex)) return;
+        setSelectedRight(selectedRight === displayIndex ? null : displayIndex);
+      };
+
+      const allMatched = matchedPairs.size === data.pairs.length;
+
+      return (
+        <div className="interactive-matching">
+          <div className="interactive-instructions">
+            <p>Match the inspection type with its purpose by clicking on corresponding items:</p>
+          </div>
+          
+          <div className="matching-container">
+            <div className="matching-left">
+              <h4>Inspection Types</h4>
+              {data.pairs.map((pair, index) => (
+                <button
+                  key={`left-${index}`}
+                  className={`matching-item left ${
+                    selectedLeft === index ? 'selected' : ''
+                  } ${
+                    matchedPairs.has(index) ? 'matched' : ''
+                  } ${
+                    wrongSelection && selectedLeft === index ? 'wrong' : ''
+                  }`}
+                  onClick={() => handleLeftClick(index)}
+                  disabled={matchedPairs.has(index)}
+                >
+                  {pair.left}
+                  {matchedPairs.has(index) && <span className="match-icon">✅</span>}
+                  {wrongSelection && selectedLeft === index && <span className="wrong-icon">❌</span>}
+                </button>
+              ))}
+            </div>
+            
+            <div className="matching-right">
+              <h4>Purposes</h4>
+              {shuffledRightOrder.length > 0 && shuffledRightOrder.map((originalIndex, displayIndex) => {
+                const pair = data.pairs![originalIndex];
+                return (
+                  <button
+                    key={`right-${displayIndex}`}
+                    className={`matching-item right ${
+                      selectedRight === displayIndex ? 'selected' : ''
+                    } ${
+                      matchedPairs.has(originalIndex) ? 'matched' : ''
+                    } ${
+                      wrongSelection && selectedRight === displayIndex ? 'wrong' : ''
+                    }`}
+                    onClick={() => handleRightClick(displayIndex)}
+                    disabled={matchedPairs.has(originalIndex)}
+                  >
+                    {pair.right}
+                    {matchedPairs.has(originalIndex) && <span className="match-icon">✅</span>}
+                    {wrongSelection && selectedRight === displayIndex && <span className="wrong-icon">❌</span>}
+                  </button>
+                );
+              })}
+            </div>
+          </div>
+          
+          {wrongSelection && (
+            <div className="wrong-feedback">
+              <p>❌ That's not a match! Try again.</p>
+            </div>
+          )}
+          
+          {allMatched && (
+            <div className="interactive-feedback">
+              <h4>🎉 Excellent! All matches are correct!</h4>
+              <div className="feedback-summary">
+                <p>
+                  <strong>Perfect Score!</strong> You've successfully matched all inspection types with their purposes.
+                </p>
+                <p>
+                  <strong>Tip:</strong> Understanding the different types of inspections helps you know when to request 
+                  specialized inspections based on your specific situation and the home's characteristics.
+                </p>
+              </div>
+            </div>
+          )}
+        </div>
+      );
+    }
+
+    if (type === 'highlight' && data.items) {
+      const handleItemClick = (item: InteractiveItem) => {
+        const newClickedItems = new Set(clickedItems);
+        if (newClickedItems.has(item.id)) {
+          newClickedItems.delete(item.id);
+        } else {
+          newClickedItems.add(item.id);
+        }
+        setClickedItems(newClickedItems);
+        
+        // Show feedback after a short delay
+        setTimeout(() => {
+          setShowInteractiveFeedback(true);
+        }, 500);
+      };
+
+      const correctItems = data.items.filter(item => item.correct);
+      const selectedCorrectItems = data.items.filter(item => 
+        item.correct && clickedItems.has(item.id)
+      );
+      const selectedIncorrectItems = data.items.filter(item => 
+        !item.correct && clickedItems.has(item.id)
+      );
+
+      return (
+        <div className="interactive-highlight">
+          <div className="interactive-instructions">
+            <p>Click on the items that are red flags during a home inspection:</p>
+          </div>
+          
+          <div className="highlight-grid">
+            {data.items.map((item: InteractiveItem) => {
+              const isClicked = clickedItems.has(item.id);
+              const isCorrect = item.correct;
+              
+              let className = "highlight-item";
+              if (isClicked) {
+                className += isCorrect ? " correct" : " incorrect";
+              }
+              
+              return (
+                <button
+                  key={item.id}
+                  className={className}
+                  onClick={() => handleItemClick(item)}
+                >
+                  {item.label}
+                  {isClicked && (
+                    <span className="feedback-icon">
+                      {isCorrect ? "✅" : "❌"}
+                    </span>
+                  )}
+                </button>
+              );
+            })}
+          </div>
+          
+          {showInteractiveFeedback && (
+            <div className="interactive-feedback">
+              <h4>Great job! Here's what you identified:</h4>
+              <div className="feedback-results">
+                <div className="correct-selections">
+                  <h5>✅ Correctly Identified Red Flags:</h5>
+                  <ul>
+                    {selectedCorrectItems.map(item => (
+                      <li key={item.id}>{item.label}</li>
+                    ))}
+                  </ul>
+                </div>
+                {selectedIncorrectItems.length > 0 && (
+                  <div className="incorrect-selections">
+                    <h5>❌ Incorrectly Selected:</h5>
+                    <ul>
+                      {selectedIncorrectItems.map(item => (
+                        <li key={item.id}>{item.label}</li>
+                      ))}
+                    </ul>
+                  </div>
+                )}
+                <div className="feedback-summary">
+                  <p>
+                    <strong>Score:</strong> {selectedCorrectItems.length} out of {correctItems.length} red flags correctly identified
+                  </p>
+                  <p>
+                    <strong>Tip:</strong> Red flags are serious issues that could affect the home's safety, 
+                    structural integrity, or require expensive repairs. Always pay attention to these during inspections.
                   </p>
                 </div>
               </div>

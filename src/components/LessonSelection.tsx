@@ -19,7 +19,8 @@ const LessonSelection: React.FC<LessonSelectionProps> = ({
       description: "Learn the basics of home inspections, what inspectors do, and why they're important.",
       duration: "5-7 minutes",
       topics: ["Definition", "Inspector's Role", "Key Areas Covered"],
-      icon: "🔍"
+      icon: "🔍",
+      coins: 10
     },
     {
       id: 2,
@@ -27,7 +28,8 @@ const LessonSelection: React.FC<LessonSelectionProps> = ({
       description: "Explore different types of inspections and when you might need specialized services.",
       duration: "6-8 minutes",
       topics: ["General Inspection", "Specialized Services", "When to Consider"],
-      icon: "📋"
+      icon: "📋",
+      coins: 15
     },
     {
       id: 3,
@@ -35,7 +37,8 @@ const LessonSelection: React.FC<LessonSelectionProps> = ({
       description: "Identify common warning signs and potential problems during home inspections.",
       duration: "7-9 minutes",
       topics: ["Structural Issues", "Electrical Problems", "Plumbing Concerns", "HVAC Issues"],
-      icon: "⚠️"
+      icon: "⚠️",
+      coins: 25
     }
   ];
 
@@ -91,6 +94,7 @@ const LessonSelection: React.FC<LessonSelectionProps> = ({
                 
                 <div className="lesson-meta">
                   <span className="duration">⏱️ {lesson.duration}</span>
+                  <span className="coins-reward">🪙 {lesson.coins} coins</span>
                   {isCompleted && <span className="completed-badge">✅ Completed</span>}
                   {!isAvailable && <span className="locked-badge">🔒 Locked</span>}
                 </div>
