@@ -11,12 +11,11 @@ function App() {
   const [completedLessons, setCompletedLessons] = useLocalStorage<number[]>('nestNavigate_completedLessons', []);
   const [userCoins, setUserCoins] = useLocalStorage<number>('nestNavigate_userCoins', 0);
 
-  const lessonCoins = [10, 15, 25]; // Coins earned per lesson
+  const lessonCoins = [10, 15, 25]; 
 
   const handleLessonComplete = (lessonNumber: number) => {
     if (!completedLessons.includes(lessonNumber)) {
       setCompletedLessons([...completedLessons, lessonNumber]);
-      // Add lesson-specific coins
       const coinsEarned = lessonCoins[lessonNumber - 1] || 15;
       setUserCoins(prevCoins => prevCoins + coinsEarned);
     }

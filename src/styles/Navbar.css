@@ -18,7 +18,6 @@
   height: 70px;
 }
 
-/* Brand Section */
 .navbar-brand {
   display: flex;
   align-items: center;
@@ -59,7 +58,6 @@
   display: block;
 }
 
-/* Navigation Menu */
 .navbar-menu {
   display: flex;
   gap: 1rem;
@@ -95,14 +93,12 @@
   box-shadow: 0 4px 12px rgba(59, 130, 246, 0.4);
 }
 
-/* User Profile Section */
 .navbar-actions {
   display: flex;
   align-items: center;
   gap: 1rem;
 }
 
-/* Settings Button */
 .settings-button {
   position: relative;
 }
@@ -124,7 +120,6 @@
   transform: translateY(-1px);
 }
 
-/* Coin Counter */
 .coin-counter {
   display: flex;
   align-items: center;
@@ -228,7 +223,6 @@
   line-height: 1;
 }
 
-/* Mobile Menu Button */
 .mobile-menu-btn {
   display: none;
   background: none;
@@ -246,7 +240,6 @@
   color: #1e293b;
 }
 
-/* Responsive Design */
 @media (max-width: 1024px) {
   .navbar-actions {
     gap: 0.75rem;
@@ -321,7 +314,6 @@
   }
 }
 
-/* Mobile Menu Overlay */
 .mobile-menu {
   position: fixed;
   top: 60px;

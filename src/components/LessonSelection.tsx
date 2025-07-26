@@ -47,12 +47,12 @@ const LessonSelection: React.FC<LessonSelectionProps> = ({
   };
 
   return (
-    <div className="lesson-selection">
+    <div className="lesson-selection" role="main">
       <div className="selection-header">
         <h1>Understanding Home Inspections</h1>
         <p>Choose a lesson to begin your learning journey</p>
         
-        <div className="overall-progress">
+        <div className="overall-progress" role="progressbar" aria-valuenow={completedLessons.length} aria-valuemin={0} aria-valuemax={3} aria-label="Overall progress">
           <div className="progress-info">
             <span>Overall Progress</span>
             <span>{completedLessons.length} of 3 lessons completed</span>
@@ -66,7 +66,7 @@ const LessonSelection: React.FC<LessonSelectionProps> = ({
         </div>
       </div>
 
-      <div className="lessons-grid">
+      <div className="lessons-grid" role="list" aria-label="Available lessons">
         {lessons.map((lesson) => {
           const isCompleted = completedLessons.includes(lesson.id);
           const isAvailable = lesson.id === 1 || completedLessons.includes(lesson.id - 1);
@@ -76,8 +76,17 @@ const LessonSelection: React.FC<LessonSelectionProps> = ({
               key={lesson.id} 
               className={`lesson-card ${isCompleted ? 'completed' : ''} ${!isAvailable ? 'locked' : ''}`}
               onClick={() => isAvailable && onSelectLesson(lesson.id)}
+              onKeyDown={(e) => {
+                if (isAvailable && (e.key === 'Enter' || e.key === ' ')) {
+                  e.preventDefault();
+                  onSelectLesson(lesson.id);
+                }
+              }}
+              tabIndex={isAvailable ? 0 : -1}
+              role="listitem"
+              aria-label={`${lesson.title} - ${isCompleted ? 'Completed' : isAvailable ? 'Available' : 'Locked'}`}
             >
-              <div className="lesson-icon">{lesson.icon}</div>
+              <div className="lesson-icon" aria-hidden="true">{lesson.icon}</div>
               
               <div className="lesson-info">
                 <h3>{lesson.title}</h3>
@@ -85,28 +94,28 @@ const LessonSelection: React.FC<LessonSelectionProps> = ({
                 
                 <div className="lesson-topics">
                   <span>Topics covered:</span>
-                  <div className="topic-tags">
+                  <div className="topic-tags" role="list" aria-label="Topics covered in this lesson">
                     {lesson.topics.map((topic, index) => (
-                      <span key={index} className="topic-tag">{topic}</span>
+                      <span key={index} className="topic-tag" role="listitem">{topic}</span>
                     ))}
                   </div>
                 </div>
                 
                 <div className="lesson-meta">
-                  <span className="duration">⏱️ {lesson.duration}</span>
-                  <span className="coins-reward">🪙 {lesson.coins} coins</span>
-                  {isCompleted && <span className="completed-badge">✅ Completed</span>}
-                  {!isAvailable && <span className="locked-badge">🔒 Locked</span>}
+                  <span className="duration" aria-label={`Duration: ${lesson.duration}`}>⏱️ {lesson.duration}</span>
+                  <span className="coins-reward" aria-label={`Reward: ${lesson.coins} coins`}>🪙 {lesson.coins} coins</span>
+                  {isCompleted && <span className="completed-badge" aria-label="Lesson completed">✅ Completed</span>}
+                  {!isAvailable && <span className="locked-badge" aria-label="Lesson locked">🔒 Locked</span>}
                 </div>
               </div>
               
               <div className="lesson-status">
                 {isCompleted ? (
-                  <div className="status-icon completed">✓</div>
+                  <div className="status-icon completed" aria-label="Lesson completed">✓</div>
                 ) : !isAvailable ? (
-                  <div className="status-icon locked">🔒</div>
+                  <div className="status-icon locked" aria-label="Lesson locked">🔒</div>
                 ) : (
-                  <div className="status-icon available">→</div>
+                  <div className="status-icon available" aria-label="Lesson available">→</div>
                 )}
               </div>
             </div>
@@ -115,7 +124,11 @@ const LessonSelection: React.FC<LessonSelectionProps> = ({
       </div>
 
       <div className="selection-actions">
-        <button className="back-btn" onClick={onBackToOverview}>
+        <button 
+          className="back-btn" 
+          onClick={onBackToOverview}
+          aria-label="Go back to module overview"
+        >
           ← Back to Module Overview
         </button>
       </div>

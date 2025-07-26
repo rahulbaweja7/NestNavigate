@@ -24,7 +24,6 @@ const LearningModule: React.FC<LearningModuleProps> = ({
     coinsEarned: 0
   });
 
-  // Use external completed lessons if provided, otherwise use internal state
   const completedLessons = externalCompletedLessons.length > 0 ? externalCompletedLessons : internalCompletedLessons;
 
   const lessonTitles = [
@@ -33,7 +32,7 @@ const LearningModule: React.FC<LearningModuleProps> = ({
     "Red Flags to Watch For"
   ];
 
-  const lessonCoins = [10, 15, 25]; // Coins earned per lesson
+  const lessonCoins = [10, 15, 25]; 
 
   const handleStartModule = () => {
     setCurrentView('selection');
@@ -48,16 +47,13 @@ const LearningModule: React.FC<LearningModuleProps> = ({
     if (!completedLessons.includes(currentLesson)) {
       const newCompletedLessons = [...completedLessons, currentLesson];
       
-      // Update internal state
       setInternalCompletedLessons(newCompletedLessons);
       
-      // Notify parent component
       if (onLessonComplete) {
         onLessonComplete(currentLesson);
       }
     }
     
-    // Set completion data with lesson-specific coins
     setCompletionData({
       lessonNumber: currentLesson,
       lessonTitle: lessonTitles[currentLesson - 1],

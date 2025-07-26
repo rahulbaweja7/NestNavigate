@@ -21,13 +21,10 @@ const LessonCompletion: React.FC<LessonCompletionProps> = ({
   const [coinCount, setCoinCount] = useState(0);
 
   useEffect(() => {
-    // Start the animation sequence
     setShowAnimation(true);
     
-    // Show content after animation starts
     setTimeout(() => setShowContent(true), 500);
     
-    // Animate coin count
     const coinInterval = setInterval(() => {
       setCoinCount(prev => {
         if (prev < coinsEarned) {
@@ -45,7 +42,6 @@ const LessonCompletion: React.FC<LessonCompletionProps> = ({
     <div className={`lesson-completion ${showAnimation ? 'show' : ''}`}>
       <div className="completion-overlay">
         <div className="completion-card">
-          {/* Success Animation */}
           <div className="success-animation">
             <div className="checkmark-circle">
               <div className="checkmark">✓</div>
@@ -64,7 +60,6 @@ const LessonCompletion: React.FC<LessonCompletionProps> = ({
             </div>
           </div>
 
-          {/* Content */}
           {showContent && (
             <div className="completion-content">
               <h2 className="completion-title">Lesson Complete!</h2>

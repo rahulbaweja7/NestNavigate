@@ -1,4 +1,3 @@
-// Local storage keys
 const STORAGE_KEYS = {
   COMPLETED_LESSONS: 'nestNavigate_completedLessons',
   USER_COINS: 'nestNavigate_userCoins',
@@ -6,7 +5,6 @@ const STORAGE_KEYS = {
   LAST_ACTIVITY: 'nestNavigate_lastActivity'
 } as const;
 
-// User progress interface
 export interface UserProgress {
   completedLessons: number[];
   totalCoins: number;
@@ -15,9 +13,7 @@ export interface UserProgress {
   totalLessons: number;
 }
 
-// Local storage utility functions
 export const localStorageUtils = {
-  // Save completed lessons
   saveCompletedLessons: (completedLessons: number[]): void => {
     try {
       localStorage.setItem(STORAGE_KEYS.COMPLETED_LESSONS, JSON.stringify(completedLessons));
@@ -26,7 +22,6 @@ export const localStorageUtils = {
     }
   },
 
-  // Load completed lessons
   loadCompletedLessons: (): number[] => {
     try {
       const saved = localStorage.getItem(STORAGE_KEYS.COMPLETED_LESSONS);
@@ -37,7 +32,6 @@ export const localStorageUtils = {
     }
   },
 
-  // Save user coins
   saveUserCoins: (coins: number): void => {
     try {
       localStorage.setItem(STORAGE_KEYS.USER_COINS, JSON.stringify(coins));
@@ -46,7 +40,6 @@ export const localStorageUtils = {
     }
   },
 
-  // Load user coins
   loadUserCoins: (): number => {
     try {
       const saved = localStorage.getItem(STORAGE_KEYS.USER_COINS);
@@ -57,7 +50,6 @@ export const localStorageUtils = {
     }
   },
 
-  // Save complete user progress
   saveUserProgress: (progress: UserProgress): void => {
     try {
       localStorage.setItem(STORAGE_KEYS.USER_PROGRESS, JSON.stringify(progress));
@@ -66,7 +58,6 @@ export const localStorageUtils = {
     }
   },
 
-  // Load complete user progress
   loadUserProgress: (): UserProgress => {
     try {
       const saved = localStorage.getItem(STORAGE_KEYS.USER_PROGRESS);
@@ -77,7 +68,6 @@ export const localStorageUtils = {
       console.error('Failed to load user progress:', error);
     }
     
-    // Return default progress if nothing is saved
     return {
       completedLessons: [],
       totalCoins: 0,
@@ -87,7 +77,6 @@ export const localStorageUtils = {
     };
   },
 
-  // Update last activity timestamp
   updateLastActivity: (): void => {
     try {
       localStorage.setItem(STORAGE_KEYS.LAST_ACTIVITY, new Date().toISOString());
@@ -96,7 +85,6 @@ export const localStorageUtils = {
     }
   },
 
-  // Get last activity
   getLastActivity: (): string => {
     try {
       const saved = localStorage.getItem(STORAGE_KEYS.LAST_ACTIVITY);
@@ -107,7 +95,6 @@ export const localStorageUtils = {
     }
   },
 
-  // Clear all stored data (for testing or reset functionality)
   clearAllData: (): void => {
     try {
       Object.values(STORAGE_KEYS).forEach(key => {
@@ -118,7 +105,6 @@ export const localStorageUtils = {
     }
   },
 
-  // Check if local storage is available
   isAvailable: (): boolean => {
     try {
       const test = '__localStorage_test__';

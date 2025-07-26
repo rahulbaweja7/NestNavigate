@@ -14,7 +14,7 @@ const Settings: React.FC<SettingsProps> = ({ userCoins, completedLessons, onRese
     }
   };
 
-  const totalLessons = 12; // Assuming there are 12 total lessons
+  const totalLessons = 12; 
   const progressPercentage = totalLessons > 0 ? Math.round((completedLessons.length / totalLessons) * 100) : 0;
 
   return (

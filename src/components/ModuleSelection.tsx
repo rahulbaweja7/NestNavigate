@@ -51,7 +51,6 @@ const ModuleSelection: React.FC<ModuleSelectionProps> = ({ completedLessons }) =
     if (moduleId === 'home-inspections') {
       navigate('/module');
     } else {
-      // For future modules, this would navigate to different routes
       alert('This module is coming soon!');
     }
   };

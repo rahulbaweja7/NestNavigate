@@ -1,6 +1,4 @@
-// Debug utilities for localStorage testing
 export const debugUtils = {
-  // Log all localStorage data for NestNavigate
   logAllData: () => {
     console.log('=== NestNavigate localStorage Debug ===');
     const keys = Object.keys(localStorage).filter(key => key.startsWith('nestNavigate_'));
@@ -20,14 +18,12 @@ export const debugUtils = {
     });
   },
 
-  // Clear all NestNavigate data
   clearAllData: () => {
     const keys = Object.keys(localStorage).filter(key => key.startsWith('nestNavigate_'));
     keys.forEach(key => localStorage.removeItem(key));
     console.log('Cleared all NestNavigate data from localStorage');
   },
 
-  // Simulate completed lessons for testing
   simulateProgress: (lessonCount: number = 2) => {
     const completedLessons = Array.from({ length: lessonCount }, (_, i) => i + 1);
     const userCoins = lessonCount * 15;
@@ -38,7 +34,6 @@ export const debugUtils = {
     console.log(`Simulated progress: ${lessonCount} lessons completed, ${userCoins} coins earned`);
   },
 
-  // Check localStorage availability
   checkStorageAvailability: () => {
     try {
       const test = '__test__';

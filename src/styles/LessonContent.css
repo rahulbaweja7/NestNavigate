@@ -155,7 +155,6 @@
   font-size: 0.95rem;
 }
 
-/* Interactive Elements */
 .interactive-clickable {
   margin-top: 1.5rem;
 }
@@ -461,7 +460,6 @@
   margin-top: 1rem;
 }
 
-/* Quiz Section */
 .quiz-section {
   padding: 2rem;
   background: #f8fafc;
@@ -617,7 +615,6 @@
   transform: translateY(-2px);
 }
 
-/* Responsive Design */
 @media (max-width: 768px) {
   .lesson-header {
     padding: 1.5rem;

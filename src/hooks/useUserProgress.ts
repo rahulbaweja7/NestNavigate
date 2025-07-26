@@ -49,7 +49,7 @@ export const useUserProgress = (): UseUserProgressReturn => {
       }
 
       const newCompletedLessons = [...prevProgress.completedLessons, lessonNumber];
-      const newTotalCoins = prevProgress.totalCoins + 15; // Each lesson gives 15 coins
+      const newTotalCoins = prevProgress.totalCoins + 15; 
       
       const newModulesCompleted = Math.floor(newCompletedLessons.length / 3);
 

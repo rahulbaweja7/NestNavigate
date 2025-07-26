@@ -64,14 +64,12 @@ const LessonContent: React.FC<LessonContentProps> = ({
   const [clickedItems, setClickedItems] = useState<Set<number>>(new Set());
   const [showInteractiveFeedback, setShowInteractiveFeedback] = useState(false);
   
-  // Matching state
   const [matchedPairs, setMatchedPairs] = useState<Set<number>>(new Set());
   const [selectedLeft, setSelectedLeft] = useState<number | null>(null);
   const [selectedRight, setSelectedRight] = useState<number | null>(null);
   const [wrongSelection, setWrongSelection] = useState<boolean>(false);
   const [shuffledRightOrder, setShuffledRightOrder] = useState<number[]>([]);
 
-  // Initialize shuffled order when component mounts or section changes
   useEffect(() => {
     const currentSectionData = lessons[currentLesson - 1]?.content.sections[currentSection];
     if (currentSectionData?.type === 'interactive' && 
@@ -79,7 +77,6 @@ const LessonContent: React.FC<LessonContentProps> = ({
         currentSectionData.interactiveElement.data.pairs) {
       const pairs = currentSectionData.interactiveElement.data.pairs;
       
-      // Create a more randomized shuffle
       const indices = Array.from({ length: pairs.length }, (_, i) => i);
       const shuffled = [];
       
@@ -88,10 +85,8 @@ const LessonContent: React.FC<LessonContentProps> = ({
         shuffled.push(indices.splice(randomIndex, 1)[0]);
       }
       
-      // Ensure it's not in the same order as original
       const isSameOrder = shuffled.every((val, index) => val === index);
       if (isSameOrder && shuffled.length > 1) {
-        // If it's the same order, swap the first two elements
         [shuffled[0], shuffled[1]] = [shuffled[1], shuffled[0]];
       }
       
@@ -99,10 +94,8 @@ const LessonContent: React.FC<LessonContentProps> = ({
     }
   }, [currentLesson, currentSection]);
 
-  // Check for matches
   useEffect(() => {
     if (selectedLeft !== null && selectedRight !== null) {
-      // Get the original index from the shuffled order for the right selection
       const originalRightIndex = shuffledRightOrder[selectedRight];
       
       if (selectedLeft === originalRightIndex) {
@@ -111,7 +104,6 @@ const LessonContent: React.FC<LessonContentProps> = ({
         setSelectedRight(null);
         setWrongSelection(false);
       } else {
-        // Wrong match, show feedback and reset after a delay
         setWrongSelection(true);
         setTimeout(() => {
           setSelectedLeft(null);
@@ -343,7 +335,6 @@ const LessonContent: React.FC<LessonContentProps> = ({
     }
     if (currentSection < totalSections - 1) {
       setCurrentSection(currentSection + 1);
-      // Reset interactive state for new section
       setClickedItems(new Set());
       setShowInteractiveFeedback(false);
       setMatchedPairs(new Set());
@@ -357,14 +348,12 @@ const LessonContent: React.FC<LessonContentProps> = ({
 
   const handlePreviousSection = () => {
     if (showQuiz) {
-      // If we're in quiz mode, go back to the last section
       setShowQuiz(false);
       setSelectedAnswer(null);
       setIsCorrect(null);
-    } else if (currentSection > 0) {
-      // If we're not in quiz mode and not on the first section, go back
+    }
+    else if (currentSection > 0) {
       setCurrentSection(currentSection - 1);
-      // Reset interactive state for new section
       setClickedItems(new Set());
       setShowInteractiveFeedback(false);
       setMatchedPairs(new Set());
@@ -396,10 +385,16 @@ const LessonContent: React.FC<LessonContentProps> = ({
         }
         setClickedItems(newClickedItems);
         
-        // Show feedback after a short delay
         setTimeout(() => {
           setShowInteractiveFeedback(true);
         }, 500);
+      };
+
+      const handleItemKeyDown = (event: React.KeyboardEvent, item: InteractiveItem) => {
+        if (event.key === 'Enter' || event.key === ' ') {
+          event.preventDefault();
+          handleItemClick(item);
+        }
       };
 
       const correctItems = data.items.filter(item => item.correct);
@@ -416,7 +411,7 @@ const LessonContent: React.FC<LessonContentProps> = ({
             <p>Click on the areas that are typically inspected during a home inspection:</p>
           </div>
           
-          <div className="clickable-grid">
+          <div className="clickable-grid" role="group" aria-label="Select areas that are typically inspected">
             {data.items.map((item: InteractiveItem) => {
               const isClicked = clickedItems.has(item.id);
               const isCorrect = item.correct;
@@ -431,10 +426,13 @@ const LessonContent: React.FC<LessonContentProps> = ({
                   key={item.id}
                   className={className}
                   onClick={() => handleItemClick(item)}
+                  onKeyDown={(e) => handleItemKeyDown(e, item)}
+                  aria-pressed={isClicked}
+                  aria-label={`${item.label} - ${isCorrect ? 'Correct area' : 'Incorrect area'} - ${isClicked ? 'Selected' : 'Not selected'}`}
                 >
                   {item.label}
                   {isClicked && (
-                    <span className="feedback-icon">
+                    <span className="feedback-icon" aria-hidden="true">
                       {isCorrect ? "✅" : "❌"}
                     </span>
                   )}
@@ -444,23 +442,23 @@ const LessonContent: React.FC<LessonContentProps> = ({
           </div>
           
           {showInteractiveFeedback && (
-            <div className="interactive-feedback">
+            <div className="interactive-feedback" role="region" aria-live="polite" aria-label="Feedback on your selections">
               <h4>Great job! Here's what you selected:</h4>
               <div className="feedback-results">
                 <div className="correct-selections">
                   <h5>✅ Correctly Selected:</h5>
-                  <ul>
+                  <ul role="list">
                     {selectedCorrectItems.map(item => (
-                      <li key={item.id}>{item.label}</li>
+                      <li key={item.id} role="listitem">{item.label}</li>
                     ))}
                   </ul>
                 </div>
                 {selectedIncorrectItems.length > 0 && (
                   <div className="incorrect-selections">
                     <h5>❌ Incorrectly Selected:</h5>
-                    <ul>
+                    <ul role="list">
                       {selectedIncorrectItems.map(item => (
-                        <li key={item.id}>{item.label}</li>
+                        <li key={item.id} role="listitem">{item.label}</li>
                       ))}
                     </ul>
                   </div>
@@ -488,10 +486,23 @@ const LessonContent: React.FC<LessonContentProps> = ({
       };
 
       const handleRightClick = (displayIndex: number) => {
-        // Get the original index from the shuffled order
         const originalIndex = shuffledRightOrder[displayIndex];
         if (matchedPairs.has(originalIndex)) return;
         setSelectedRight(selectedRight === displayIndex ? null : displayIndex);
+      };
+
+      const handleLeftKeyDown = (event: React.KeyboardEvent, index: number) => {
+        if (event.key === 'Enter' || event.key === ' ') {
+          event.preventDefault();
+          handleLeftClick(index);
+        }
+      };
+
+      const handleRightKeyDown = (event: React.KeyboardEvent, displayIndex: number) => {
+        if (event.key === 'Enter' || event.key === ' ') {
+          event.preventDefault();
+          handleRightClick(displayIndex);
+        }
       };
 
       const allMatched = matchedPairs.size === data.pairs.length;
@@ -502,7 +513,7 @@ const LessonContent: React.FC<LessonContentProps> = ({
             <p>Match the inspection type with its purpose by clicking on corresponding items:</p>
           </div>
           
-          <div className="matching-container">
+          <div className="matching-container" role="group" aria-label="Matching game - match inspection types with their purposes">
             <div className="matching-left">
               <h4>Inspection Types</h4>
               {data.pairs.map((pair, index) => (
@@ -516,11 +527,14 @@ const LessonContent: React.FC<LessonContentProps> = ({
                     wrongSelection && selectedLeft === index ? 'wrong' : ''
                   }`}
                   onClick={() => handleLeftClick(index)}
+                  onKeyDown={(e) => handleLeftKeyDown(e, index)}
                   disabled={matchedPairs.has(index)}
+                  aria-pressed={selectedLeft === index}
+                  aria-label={`${pair.left} - ${matchedPairs.has(index) ? 'Matched' : selectedLeft === index ? 'Selected' : 'Not selected'}`}
                 >
                   {pair.left}
-                  {matchedPairs.has(index) && <span className="match-icon">✅</span>}
-                  {wrongSelection && selectedLeft === index && <span className="wrong-icon">❌</span>}
+                  {matchedPairs.has(index) && <span className="match-icon" aria-hidden="true">✅</span>}
+                  {wrongSelection && selectedLeft === index && <span className="wrong-icon" aria-hidden="true">❌</span>}
                 </button>
               ))}
             </div>
@@ -540,11 +554,14 @@ const LessonContent: React.FC<LessonContentProps> = ({
                       wrongSelection && selectedRight === displayIndex ? 'wrong' : ''
                     }`}
                     onClick={() => handleRightClick(displayIndex)}
+                    onKeyDown={(e) => handleRightKeyDown(e, displayIndex)}
                     disabled={matchedPairs.has(originalIndex)}
+                    aria-pressed={selectedRight === displayIndex}
+                    aria-label={`${pair.right} - ${matchedPairs.has(originalIndex) ? 'Matched' : selectedRight === displayIndex ? 'Selected' : 'Not selected'}`}
                   >
                     {pair.right}
-                    {matchedPairs.has(originalIndex) && <span className="match-icon">✅</span>}
-                    {wrongSelection && selectedRight === displayIndex && <span className="wrong-icon">❌</span>}
+                    {matchedPairs.has(originalIndex) && <span className="match-icon" aria-hidden="true">✅</span>}
+                    {wrongSelection && selectedRight === displayIndex && <span className="wrong-icon" aria-hidden="true">❌</span>}
                   </button>
                 );
               })}
@@ -552,13 +569,13 @@ const LessonContent: React.FC<LessonContentProps> = ({
           </div>
           
           {wrongSelection && (
-            <div className="wrong-feedback">
+            <div className="wrong-feedback" role="alert" aria-live="assertive">
               <p>❌ That's not a match! Try again.</p>
             </div>
           )}
           
           {allMatched && (
-            <div className="interactive-feedback">
+            <div className="interactive-feedback" role="region" aria-live="polite" aria-label="Congratulations message">
               <h4>🎉 Excellent! All matches are correct!</h4>
               <div className="feedback-summary">
                 <p>
@@ -585,7 +602,6 @@ const LessonContent: React.FC<LessonContentProps> = ({
         }
         setClickedItems(newClickedItems);
         
-        // Show feedback after a short delay
         setTimeout(() => {
           setShowInteractiveFeedback(true);
         }, 500);
@@ -676,11 +692,11 @@ const LessonContent: React.FC<LessonContentProps> = ({
   const renderContent = () => {
     if (showQuiz) {
       return (
-        <div className="quiz-section">
+        <div className="quiz-section" role="region" aria-label="Lesson quiz">
           <h3>Lesson Quiz</h3>
           <div className="quiz-question">
             <p>{currentLessonData.quiz.question}</p>
-            <div className="quiz-options">
+            <div className="quiz-options" role="radiogroup" aria-label="Quiz options">
               {currentLessonData.quiz.options.map((option, index) => (
                 <button
                   key={index}
@@ -693,13 +709,16 @@ const LessonContent: React.FC<LessonContentProps> = ({
                   }`}
                   onClick={() => handleAnswerSelect(index)}
                   disabled={selectedAnswer !== null}
+                  role="radio"
+                  aria-checked={selectedAnswer === index}
+                  aria-label={`Option ${index + 1}: ${option}`}
                 >
                   {option}
                 </button>
               ))}
             </div>
             {selectedAnswer !== null && (
-              <div className={`quiz-feedback ${isCorrect ? 'correct' : 'incorrect'}`}>
+              <div className={`quiz-feedback ${isCorrect ? 'correct' : 'incorrect'}`} role="alert" aria-live="assertive">
                 {isCorrect ? (
                   <div>
                     <p>✅ Correct! You've completed this lesson!</p>
@@ -710,6 +729,7 @@ const LessonContent: React.FC<LessonContentProps> = ({
                     <button 
                       className="try-again-btn"
                       onClick={handleTryAgain}
+                      aria-label="Try the quiz question again"
                     >
                       Try Again
                     </button>
@@ -763,10 +783,10 @@ const LessonContent: React.FC<LessonContentProps> = ({
   };
 
   return (
-    <div className="lesson-content">
+    <div className="lesson-content" role="main">
       <div className="lesson-header">
         <h2>Lesson {currentLesson}: {currentLessonData.title}</h2>
-        <div className="lesson-progress">
+        <div className="lesson-progress" role="progressbar" aria-valuenow={currentSection + 1} aria-valuemin={1} aria-valuemax={totalSections} aria-label="Lesson progress">
           <span>{currentSection + 1} of {totalSections} sections</span>
           <div className="lesson-progress-bar">
             <div 
@@ -783,6 +803,7 @@ const LessonContent: React.FC<LessonContentProps> = ({
         <button 
           className="lesson-btn secondary"
           onClick={currentSection === 0 && !showQuiz ? onBackToOverview : handlePreviousSection}
+          aria-label={currentSection === 0 && !showQuiz ? 'Go back to lesson selection' : 'Go to previous section'}
         >
           {currentSection === 0 && !showQuiz ? 'Back to Selection' : '← Previous Section'}
         </button>
@@ -790,6 +811,12 @@ const LessonContent: React.FC<LessonContentProps> = ({
           className="lesson-btn primary"
           onClick={showQuiz ? handleNext : handleNextSection}
           disabled={showQuiz && selectedAnswer === null}
+          aria-label={showQuiz 
+            ? 'Complete lesson' 
+            : currentSection === totalSections - 1 
+              ? 'Take quiz' 
+              : 'Go to next section'
+          }
         >
           {showQuiz 
             ? 'Complete Lesson'

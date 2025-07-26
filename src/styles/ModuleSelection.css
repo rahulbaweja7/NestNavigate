@@ -219,7 +219,7 @@
   transform: translateY(-1px);
 }
 
-/* Responsive Design */
+
 @media (max-width: 768px) {
   .module-selection-page {
     padding: 1rem;

@@ -44,7 +44,6 @@
   transform: scale(1);
 }
 
-/* Success Animation */
 .success-animation {
   position: relative;
   margin-bottom: 2rem;
@@ -130,7 +129,6 @@
   }
 }
 
-/* Content */
 .completion-content {
   animation: content-fade-in 0.5s ease-out 0.8s both;
 }
@@ -168,7 +166,6 @@
   color: #2d3748;
 }
 
-/* Achievement Section */
 .achievement-section {
   display: flex;
   align-items: center;
@@ -209,7 +206,6 @@
   opacity: 0.8;
 }
 
-/* Coins Earned */
 .coins-earned {
   margin-bottom: 2rem;
 }
@@ -279,7 +275,6 @@
   line-height: 1;
 }
 
-/* Actions */
 .completion-actions {
   display: flex;
   gap: 1rem;
@@ -320,7 +315,6 @@
   transform: translateY(-2px);
 }
 
-/* Responsive Design */
 @media (max-width: 768px) {
   .completion-overlay {
     padding: 1rem;
