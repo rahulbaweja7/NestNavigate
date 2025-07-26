@@ -3,13 +3,12 @@ import { useNavigate, useLocation } from 'react-router-dom';
 import '../styles/Navbar.css';
 
 interface NavbarProps {
-  completedLessons?: number[];
+  userCoins?: number;
 }
 
-const Navbar: React.FC<NavbarProps> = ({ completedLessons = [] }) => {
+const Navbar: React.FC<NavbarProps> = ({ userCoins = 0 }) => {
   const navigate = useNavigate();
   const location = useLocation();
-  const userCoins = 0; // Mock coin data
 
   const handleLogoClick = () => { navigate('/'); };
   const handleModuleClick = () => { navigate('/module'); };

@@ -2,11 +2,21 @@ import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import '../styles/HomePage.css';
 
-const HomePage: React.FC = () => {
+interface HomePageProps {
+  onResetProgress?: () => void;
+}
+
+const HomePage: React.FC<HomePageProps> = ({ onResetProgress }) => {
   const navigate = useNavigate();
 
   const handleStartLearning = () => {
     navigate('/module');
+  };
+
+  const handleResetProgress = () => {
+    if (onResetProgress && window.confirm('Are you sure you want to reset all your progress? This action cannot be undone.')) {
+      onResetProgress();
+    }
   };
 
   return (
@@ -95,6 +105,21 @@ const HomePage: React.FC = () => {
               Coming Soon
             </button>
           </div>
+        </div>
+      </div>
+      
+      {/* Settings Section */}
+      <div className="settings-section">
+        <h2 className="section-title">Settings</h2>
+        <div className="settings-card">
+          <h3>Progress Management</h3>
+          <p>Reset your learning progress and start fresh</p>
+          <button 
+            className="reset-progress-btn"
+            onClick={handleResetProgress}
+          >
+            Reset Progress
+          </button>
         </div>
       </div>
     </div>

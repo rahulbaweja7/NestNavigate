@@ -13,13 +13,29 @@ interface IconItem {
   text: string;
 }
 
+interface InteractiveItem {
+  id: number;
+  label: string;
+  correct: boolean;
+}
+
+interface InteractivePair {
+  left: string;
+  right: string;
+}
+
+interface InteractiveData {
+  items?: InteractiveItem[];
+  pairs?: InteractivePair[];
+}
+
 interface ContentSection {
   title: string;
   content: string | string[] | IconItem[];
   type: 'text' | 'list' | 'icons' | 'interactive';
   interactiveElement?: {
     type: 'clickable' | 'drag' | 'highlight';
-    data: any;
+    data: InteractiveData;
   };
 }
 
@@ -38,7 +54,6 @@ interface Lesson {
 const LessonContent: React.FC<LessonContentProps> = ({
   currentLesson,
   onNextLesson,
-  onPreviousLesson,
   onBackToOverview
 }) => {
   const [showQuiz, setShowQuiz] = useState(false);
@@ -274,7 +289,13 @@ const LessonContent: React.FC<LessonContentProps> = ({
   };
 
   const handlePreviousSection = () => {
-    if (currentSection > 0) {
+    if (showQuiz) {
+      // If we're in quiz mode, go back to the last section
+      setShowQuiz(false);
+      setSelectedAnswer(null);
+      setIsCorrect(null);
+    } else if (currentSection > 0) {
+      // If we're not in quiz mode and not on the first section, go back
       setCurrentSection(currentSection - 1);
     }
   };
@@ -284,11 +305,11 @@ const LessonContent: React.FC<LessonContentProps> = ({
 
     const { type, data } = section.interactiveElement;
 
-    if (type === 'clickable') {
+    if (type === 'clickable' && data.items) {
       return (
         <div className="interactive-clickable">
           <div className="clickable-grid">
-            {data.items.map((item: any) => (
+            {data.items.map((item: InteractiveItem) => (
               <button
                 key={item.id}
                 className="clickable-item"
@@ -402,9 +423,9 @@ const LessonContent: React.FC<LessonContentProps> = ({
       <div className="lesson-actions">
         <button 
           className="lesson-btn secondary"
-          onClick={currentSection === 0 ? onBackToOverview : handlePreviousSection}
+          onClick={currentSection === 0 && !showQuiz ? onBackToOverview : handlePreviousSection}
         >
-          {currentSection === 0 ? 'Back to Selection' : '← Previous Section'}
+          {currentSection === 0 && !showQuiz ? 'Back to Selection' : '← Previous Section'}
         </button>
         <button 
           className="lesson-btn primary"

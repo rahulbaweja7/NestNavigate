@@ -1,5 +1,4 @@
 import React, { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
 import ModuleOverview from './ModuleOverview';
 import LessonSelection from './LessonSelection';
 import LessonContent from './LessonContent';
@@ -15,7 +14,6 @@ const LearningModule: React.FC<LearningModuleProps> = ({
   onLessonComplete,
   completedLessons: externalCompletedLessons = []
 }) => {
-  const navigate = useNavigate();
   const [currentView, setCurrentView] = useState<'overview' | 'selection' | 'lesson' | 'completion'>('overview');
   const [currentLesson, setCurrentLesson] = useState(1);
   const [internalCompletedLessons, setInternalCompletedLessons] = useState<number[]>(externalCompletedLessons);
