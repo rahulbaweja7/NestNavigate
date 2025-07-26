@@ -6,17 +6,28 @@ import LessonContent from './LessonContent';
 import LessonCompletion from './LessonCompletion';
 import '../styles/LearningModule.css';
 
-const LearningModule: React.FC = () => {
+interface LearningModuleProps {
+  onLessonComplete?: (lessonNumber: number) => void;
+  completedLessons?: number[];
+}
+
+const LearningModule: React.FC<LearningModuleProps> = ({ 
+  onLessonComplete,
+  completedLessons: externalCompletedLessons = []
+}) => {
   const navigate = useNavigate();
   const [currentView, setCurrentView] = useState<'overview' | 'selection' | 'lesson' | 'completion'>('overview');
   const [currentLesson, setCurrentLesson] = useState(1);
-  const [completedLessons, setCompletedLessons] = useState<number[]>([]);
+  const [internalCompletedLessons, setInternalCompletedLessons] = useState<number[]>(externalCompletedLessons);
   const [showCompletion, setShowCompletion] = useState(false);
   const [completionData, setCompletionData] = useState({
     lessonNumber: 1,
     lessonTitle: '',
     coinsEarned: 0
   });
+
+  // Use external completed lessons if provided, otherwise use internal state
+  const completedLessons = externalCompletedLessons.length > 0 ? externalCompletedLessons : internalCompletedLessons;
 
   const lessonTitles = [
     "What is a Home Inspection?",
@@ -35,7 +46,15 @@ const LearningModule: React.FC = () => {
 
   const handleLessonComplete = () => {
     if (!completedLessons.includes(currentLesson)) {
-      setCompletedLessons([...completedLessons, currentLesson]);
+      const newCompletedLessons = [...completedLessons, currentLesson];
+      
+      // Update internal state
+      setInternalCompletedLessons(newCompletedLessons);
+      
+      // Notify parent component
+      if (onLessonComplete) {
+        onLessonComplete(currentLesson);
+      }
     }
     
     // Set completion data
@@ -71,7 +90,10 @@ const LearningModule: React.FC = () => {
     <div className="learning-module-page">
       <main className="module-main">
         {currentView === 'overview' && (
-          <ModuleOverview onStartModule={handleStartModule} />
+          <ModuleOverview 
+            onStartModule={handleStartModule} 
+            completedLessons={completedLessons}
+          />
         )}
         {currentView === 'selection' && (
           <LessonSelection

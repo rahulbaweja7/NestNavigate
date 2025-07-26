@@ -2,11 +2,9 @@
   max-width: 800px;
   margin: 0 auto;
   padding: 2rem;
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  background: white;
   border-radius: 20px;
-  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
-  color: white;
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
 }
 
 .module-header {
@@ -17,8 +15,9 @@
 .module-title {
   font-size: 2.5rem;
   font-weight: 700;
-  margin: 0 0 0.5rem 0;
-  background: linear-gradient(45deg, #fff, #f0f0f0);
+  color: #2d3748;
+  margin-bottom: 1rem;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
@@ -30,149 +29,349 @@
   font-weight: 400;
 }
 
+.module-description {
+  font-size: 1.1rem;
+  color: #4a5568;
+  line-height: 1.6;
+  max-width: 600px;
+  margin: 0 auto;
+}
+
+/* Module Stats */
 .module-stats {
   display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 2rem;
-  margin-bottom: 2rem;
+  grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+  gap: 1.5rem;
+  margin-bottom: 2.5rem;
+}
+
+.stat-card {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
   padding: 1.5rem;
-  background: rgba(255, 255, 255, 0.1);
-  border-radius: 15px;
-  backdrop-filter: blur(10px);
+  background: linear-gradient(135deg, #f7fafc 0%, #edf2f7 100%);
+  border-radius: 16px;
+  border: 2px solid #e2e8f0;
+  transition: all 0.3s ease;
 }
 
-.progress-section, .reward-section {
-  text-align: center;
+.stat-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
+  border-color: #cbd5e0;
 }
 
-.progress-label, .reward-label {
+.stat-icon {
+  font-size: 2rem;
+  width: 50px;
+  height: 50px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: white;
+  border-radius: 12px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+.stat-content {
+  display: flex;
+  flex-direction: column;
+}
+
+.stat-number {
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: #2d3748;
+  line-height: 1;
+}
+
+.stat-label {
   font-size: 0.9rem;
+  color: #718096;
+  font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+/* Progress Section */
+.progress-section {
+  margin-bottom: 2.5rem;
+  padding: 2rem;
+  background: linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%);
+  border-radius: 16px;
+  border: 2px solid #e2e8f0;
+}
+
+.progress-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1.5rem;
+}
+
+.progress-header h3 {
+  font-size: 1.25rem;
+  font-weight: 600;
+  color: #2d3748;
+  margin: 0;
+}
+
+.progress-status {
+  padding: 0.5rem 1rem;
+  border-radius: 20px;
+  font-size: 0.875rem;
   font-weight: 600;
   text-transform: uppercase;
   letter-spacing: 0.5px;
-  margin-bottom: 0.5rem;
-  opacity: 0.8;
 }
 
-.progress-indicator {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 0.5rem;
+.progress-status.not-started {
+  background: #f3f4f6;
+  color: #6b7280;
+}
+
+.progress-status.in-progress {
+  background: #fef3c7;
+  color: #92400e;
+}
+
+.progress-status.completed {
+  background: #d1fae5;
+  color: #065f46;
+}
+
+.progress-bar-container {
+  margin-bottom: 1.5rem;
 }
 
 .progress-bar {
   width: 100%;
-  height: 8px;
-  background: rgba(255, 255, 255, 0.2);
-  border-radius: 4px;
+  height: 12px;
+  background: #e5e7eb;
+  border-radius: 6px;
   overflow: hidden;
+  margin-bottom: 0.75rem;
+  box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.1);
 }
 
 .progress-fill {
   height: 100%;
-  background: linear-gradient(90deg, #4ade80, #22c55e);
-  border-radius: 4px;
-  transition: width 0.3s ease;
+  border-radius: 6px;
+  transition: width 0.8s ease, background-color 0.3s ease;
+  position: relative;
+}
+
+.progress-fill::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3), transparent);
+  animation: progress-shine 2s ease-in-out infinite;
+}
+
+@keyframes progress-shine {
+  0% { transform: translateX(-100%); }
+  100% { transform: translateX(100%); }
 }
 
 .progress-text {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
   font-size: 0.9rem;
+}
+
+.progress-count {
+  color: #4a5568;
   font-weight: 500;
 }
 
-.coin-reward {
+.progress-percentage {
+  color: #2d3748;
+  font-weight: 600;
+  font-size: 1rem;
+}
+
+/* Completed Lessons */
+.completed-lessons {
+  margin-top: 1.5rem;
+  padding-top: 1.5rem;
+  border-top: 2px solid #e2e8f0;
+}
+
+.completed-lessons h4 {
+  font-size: 1rem;
+  font-weight: 600;
+  color: #2d3748;
+  margin-bottom: 1rem;
+}
+
+.lesson-tags {
   display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+}
+
+.lesson-tag {
+  display: inline-flex;
   align-items: center;
-  justify-content: center;
   gap: 0.5rem;
   padding: 0.5rem 1rem;
-  background: rgba(255, 215, 0, 0.2);
-  border-radius: 25px;
-  border: 1px solid rgba(255, 215, 0, 0.3);
+  background: linear-gradient(135deg, #d1fae5 0%, #a7f3d0 100%);
+  color: #065f46;
+  border-radius: 20px;
+  font-size: 0.875rem;
+  font-weight: 500;
+  border: 1px solid #10b981;
 }
 
-.coin-icon {
-  font-size: 1.2rem;
-}
-
-.coin-amount {
-  font-size: 1.1rem;
-  font-weight: 600;
-  color: #ffd700;
-}
-
-.module-description {
-  margin-bottom: 2rem;
-  padding: 1.5rem;
-  background: rgba(255, 255, 255, 0.1);
-  border-radius: 15px;
-  backdrop-filter: blur(10px);
-}
-
-.module-description p {
-  margin: 0;
-  line-height: 1.6;
-  font-size: 1rem;
-  opacity: 0.9;
+/* Module Actions */
+.module-actions {
+  text-align: center;
 }
 
 .start-module-btn {
-  width: 100%;
-  padding: 1rem 2rem;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: white;
+  border: none;
+  padding: 1rem 2.5rem;
   font-size: 1.1rem;
   font-weight: 600;
-  color: #667eea;
-  background: white;
-  border: none;
   border-radius: 12px;
   cursor: pointer;
   transition: all 0.3s ease;
-  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 4px 15px rgba(102, 126, 234, 0.3);
+  margin-bottom: 1rem;
 }
 
 .start-module-btn:hover {
   transform: translateY(-2px);
-  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
-  background: #f8fafc;
+  box-shadow: 0 8px 25px rgba(102, 126, 234, 0.4);
 }
 
-.start-module-btn:active {
-  transform: translateY(0);
+.start-module-btn.resume {
+  background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+  box-shadow: 0 4px 15px rgba(16, 185, 129, 0.3);
+}
+
+.start-module-btn.resume:hover {
+  box-shadow: 0 8px 25px rgba(16, 185, 129, 0.4);
+}
+
+.module-tip {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.75rem;
+  padding: 1rem;
+  background: linear-gradient(135deg, #fef3c7 0%, #fde68a 100%);
+  border-radius: 12px;
+  border: 1px solid #f59e0b;
+  max-width: 500px;
+  margin: 0 auto;
+}
+
+.tip-icon {
+  font-size: 1.25rem;
+  flex-shrink: 0;
+}
+
+.tip-text {
+  font-size: 0.9rem;
+  color: #92400e;
+  font-weight: 500;
+  line-height: 1.4;
 }
 
 /* Responsive Design */
 @media (max-width: 768px) {
   .module-overview {
-    margin: 1rem;
     padding: 1.5rem;
+    margin: 1rem;
   }
-  
+
   .module-title {
     font-size: 2rem;
   }
-  
+
+  .module-description {
+    font-size: 1rem;
+  }
+
   .module-stats {
     grid-template-columns: 1fr;
-    gap: 1.5rem;
+    gap: 1rem;
   }
-  
-  .module-subtitle {
-    font-size: 1rem;
+
+  .stat-card {
+    padding: 1rem;
+  }
+
+  .progress-section {
+    padding: 1.5rem;
+  }
+
+  .progress-header {
+    flex-direction: column;
+    gap: 0.75rem;
+    align-items: flex-start;
+  }
+
+  .progress-text {
+    flex-direction: column;
+    gap: 0.5rem;
+    align-items: flex-start;
+  }
+
+  .lesson-tags {
+    flex-direction: column;
+  }
+
+  .lesson-tag {
+    width: 100%;
+    justify-content: center;
+  }
+
+  .start-module-btn {
+    width: 100%;
+    padding: 1rem;
+  }
+
+  .module-tip {
+    flex-direction: column;
+    text-align: center;
   }
 }
 
 @media (max-width: 480px) {
   .module-overview {
     padding: 1rem;
+    margin: 0.5rem;
   }
-  
+
   .module-title {
     font-size: 1.75rem;
   }
-  
-  .start-module-btn {
-    padding: 0.875rem 1.5rem;
-    font-size: 1rem;
+
+  .stat-icon {
+    font-size: 1.5rem;
+    width: 40px;
+    height: 40px;
+  }
+
+  .stat-number {
+    font-size: 1.25rem;
+  }
+
+  .progress-bar {
+    height: 10px;
+  }
+
+  .progress-fill {
+    height: 10px;
   }
 } 

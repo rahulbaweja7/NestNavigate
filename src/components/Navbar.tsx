@@ -5,38 +5,31 @@ import '../styles/Navbar.css';
 const Navbar: React.FC = () => {
   const navigate = useNavigate();
   const location = useLocation();
+  const userCoins = 125; // Mock coin data
 
-  // Mock coin data - in a real app this would come from state management
-  const userCoins = 125;
-
-  const handleLogoClick = () => {
-    navigate('/');
-  };
-
-  const handleModuleClick = () => {
-    navigate('/module');
-  };
+  const handleLogoClick = () => { navigate('/'); };
+  const handleModuleClick = () => { navigate('/module'); };
 
   return (
     <nav className="navbar">
       <div className="navbar-container">
         <div className="navbar-brand" onClick={handleLogoClick}>
-          <div className="brand-logo">🏠</div>
+          <div className="brand-icon">🏠</div>
           <div className="brand-text">
-            <h1>Nest Navigate</h1>
-            <span>Learning Platform</span>
+            <span className="brand-title">Nest Navigate</span>
+            <span className="brand-subtitle">Learn • Navigate • Succeed</span>
           </div>
         </div>
         
         <div className="navbar-menu">
           <button 
-            className={`nav-link ${location.pathname === '/' ? 'active' : ''}`}
+            className={`nav-link ${location.pathname === '/' ? 'active' : ''}`} 
             onClick={handleLogoClick}
           >
             Home
           </button>
           <button 
-            className={`nav-link ${location.pathname === '/module' ? 'active' : ''}`}
+            className={`nav-link ${location.pathname === '/module' ? 'active' : ''}`} 
             onClick={handleModuleClick}
           >
             Learning Modules
@@ -53,9 +46,9 @@ const Navbar: React.FC = () => {
           </div>
           
           <div className="user-profile">
-            <div className="avatar">👤</div>
+            <div className="user-avatar">👤</div>
             <div className="user-info">
-              <span className="username">Welcome!</span>
+              <span className="user-name">John Doe</span>
               <span className="user-level">Beginner</span>
             </div>
           </div>
