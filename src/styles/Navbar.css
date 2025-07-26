@@ -253,6 +253,7 @@
   
   .coin-amount {
     font-size: 0.9rem;
+    color: #000000 !important;
   }
   
   .coin-label {
