@@ -25,7 +25,6 @@ export const useUserProgress = (): UseUserProgressReturn => {
   
   const [isStorageAvailable, setIsStorageAvailable] = useState(true);
 
-  // Load progress from localStorage on component mount
   useEffect(() => {
     const checkStorage = localStorageUtils.isAvailable();
     setIsStorageAvailable(checkStorage);
@@ -36,7 +35,6 @@ export const useUserProgress = (): UseUserProgressReturn => {
     }
   }, []);
 
-  // Save progress to localStorage whenever it changes
   useEffect(() => {
     if (isStorageAvailable) {
       localStorageUtils.saveUserProgress(progress);
@@ -44,10 +42,8 @@ export const useUserProgress = (): UseUserProgressReturn => {
     }
   }, [progress, isStorageAvailable]);
 
-  // Add a completed lesson
   const addCompletedLesson = useCallback((lessonNumber: number) => {
     setProgress(prevProgress => {
-      // Don't add if already completed
       if (prevProgress.completedLessons.includes(lessonNumber)) {
         return prevProgress;
       }
@@ -55,7 +51,6 @@ export const useUserProgress = (): UseUserProgressReturn => {
       const newCompletedLessons = [...prevProgress.completedLessons, lessonNumber];
       const newTotalCoins = prevProgress.totalCoins + 15; // Each lesson gives 15 coins
       
-      // Calculate modules completed (assuming 3 lessons per module)
       const newModulesCompleted = Math.floor(newCompletedLessons.length / 3);
 
       return {
@@ -68,7 +63,6 @@ export const useUserProgress = (): UseUserProgressReturn => {
     });
   }, []);
 
-  // Add coins (for future features like achievements, streaks, etc.)
   const addCoins = useCallback((coins: number) => {
     setProgress(prevProgress => ({
       ...prevProgress,
@@ -77,7 +71,6 @@ export const useUserProgress = (): UseUserProgressReturn => {
     }));
   }, []);
 
-  // Reset all progress
   const resetProgress = useCallback(() => {
     const resetProgress: UserProgress = {
       completedLessons: [],

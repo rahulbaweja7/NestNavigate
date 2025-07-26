@@ -61,6 +61,8 @@ const LessonContent: React.FC<LessonContentProps> = ({
   const [isCorrect, setIsCorrect] = useState<boolean | null>(null);
   const [currentSection, setCurrentSection] = useState(0);
   const [completedSections, setCompletedSections] = useState<number[]>([]);
+  const [clickedItems, setClickedItems] = useState<Set<number>>(new Set());
+  const [showInteractiveFeedback, setShowInteractiveFeedback] = useState(false);
 
   const lessons: Lesson[] = [
     {
@@ -283,6 +285,9 @@ const LessonContent: React.FC<LessonContentProps> = ({
     }
     if (currentSection < totalSections - 1) {
       setCurrentSection(currentSection + 1);
+      // Reset interactive state for new section
+      setClickedItems(new Set());
+      setShowInteractiveFeedback(false);
     } else {
       setShowQuiz(true);
     }
@@ -297,30 +302,115 @@ const LessonContent: React.FC<LessonContentProps> = ({
     } else if (currentSection > 0) {
       // If we're not in quiz mode and not on the first section, go back
       setCurrentSection(currentSection - 1);
+      // Reset interactive state for new section
+      setClickedItems(new Set());
+      setShowInteractiveFeedback(false);
     }
   };
 
-  const renderInteractiveElement = (section: ContentSection) => {
-    if (section.type !== 'interactive' || !section.interactiveElement) return null;
+  const handleTryAgain = () => {
+    setSelectedAnswer(null);
+    setIsCorrect(null);
+  };
+
+    const renderInteractiveElement = (section: ContentSection) => {
+    if (section.type !== 'interactive' || !section.interactiveElement) {
+      return null;
+    }
 
     const { type, data } = section.interactiveElement;
 
     if (type === 'clickable' && data.items) {
+      const handleItemClick = (item: InteractiveItem) => {
+        const newClickedItems = new Set(clickedItems);
+        if (newClickedItems.has(item.id)) {
+          newClickedItems.delete(item.id);
+        } else {
+          newClickedItems.add(item.id);
+        }
+        setClickedItems(newClickedItems);
+        
+        // Show feedback after a short delay
+        setTimeout(() => {
+          setShowInteractiveFeedback(true);
+        }, 500);
+      };
+
+      const correctItems = data.items.filter(item => item.correct);
+      const selectedCorrectItems = data.items.filter(item => 
+        item.correct && clickedItems.has(item.id)
+      );
+      const selectedIncorrectItems = data.items.filter(item => 
+        !item.correct && clickedItems.has(item.id)
+      );
+
       return (
         <div className="interactive-clickable">
-          <div className="clickable-grid">
-            {data.items.map((item: InteractiveItem) => (
-              <button
-                key={item.id}
-                className="clickable-item"
-                onClick={() => {
-                  // Handle click logic
-                }}
-              >
-                {item.label}
-              </button>
-            ))}
+          <div className="interactive-instructions">
+            <p>Click on the areas that are typically inspected during a home inspection:</p>
           </div>
+          
+          <div className="clickable-grid">
+            {data.items.map((item: InteractiveItem) => {
+              const isClicked = clickedItems.has(item.id);
+              const isCorrect = item.correct;
+              
+              let className = "clickable-item";
+              if (isClicked) {
+                className += isCorrect ? " correct" : " incorrect";
+              }
+              
+              return (
+                <button
+                  key={item.id}
+                  className={className}
+                  onClick={() => handleItemClick(item)}
+                >
+                  {item.label}
+                  {isClicked && (
+                    <span className="feedback-icon">
+                      {isCorrect ? "✅" : "❌"}
+                    </span>
+                  )}
+                </button>
+              );
+            })}
+          </div>
+          
+          {showInteractiveFeedback && (
+            <div className="interactive-feedback">
+              <h4>Great job! Here's what you selected:</h4>
+              <div className="feedback-results">
+                <div className="correct-selections">
+                  <h5>✅ Correctly Selected:</h5>
+                  <ul>
+                    {selectedCorrectItems.map(item => (
+                      <li key={item.id}>{item.label}</li>
+                    ))}
+                  </ul>
+                </div>
+                {selectedIncorrectItems.length > 0 && (
+                  <div className="incorrect-selections">
+                    <h5>❌ Incorrectly Selected:</h5>
+                    <ul>
+                      {selectedIncorrectItems.map(item => (
+                        <li key={item.id}>{item.label}</li>
+                      ))}
+                    </ul>
+                  </div>
+                )}
+                <div className="feedback-summary">
+                  <p>
+                    <strong>Score:</strong> {selectedCorrectItems.length} out of {correctItems.length} correct areas selected
+                  </p>
+                  <p>
+                    <strong>Tip:</strong> Home inspectors focus on structural and safety-related components, 
+                    not cosmetic details like paint colors or furniture arrangement.
+                  </p>
+                </div>
+              </div>
+            </div>
+          )}
         </div>
       );
     }
@@ -355,7 +445,21 @@ const LessonContent: React.FC<LessonContentProps> = ({
             </div>
             {selectedAnswer !== null && (
               <div className={`quiz-feedback ${isCorrect ? 'correct' : 'incorrect'}`}>
-                {isCorrect ? '✅ Correct! You\'ve completed this lesson!' : '❌ Incorrect. Try again!'}
+                {isCorrect ? (
+                  <div>
+                    <p>✅ Correct! You've completed this lesson!</p>
+                  </div>
+                ) : (
+                  <div>
+                    <p>❌ Incorrect. Try again!</p>
+                    <button 
+                      className="try-again-btn"
+                      onClick={handleTryAgain}
+                    >
+                      Try Again
+                    </button>
+                  </div>
+                )}
               </div>
             )}
           </div>

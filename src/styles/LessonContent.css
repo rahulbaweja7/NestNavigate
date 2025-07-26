@@ -199,6 +199,109 @@
   color: #991b1b;
 }
 
+.clickable-item.correct {
+  border-color: #10b981;
+  background: #d1fae5;
+  color: #065f46;
+}
+
+.clickable-item .feedback-icon {
+  margin-left: 0.5rem;
+  font-size: 1.2rem;
+}
+
+.interactive-instructions {
+  margin-bottom: 1.5rem;
+  text-align: center;
+}
+
+.interactive-instructions p {
+  font-size: 1rem;
+  color: #4a5568;
+  font-weight: 500;
+}
+
+.interactive-feedback {
+  margin-top: 2rem;
+  padding: 1.5rem;
+  background: #f8fafc;
+  border-radius: 12px;
+  border: 2px solid #e2e8f0;
+}
+
+.interactive-feedback h4 {
+  font-size: 1.3rem;
+  font-weight: 600;
+  color: #2d3748;
+  margin-bottom: 1rem;
+  text-align: center;
+}
+
+.feedback-results {
+  display: grid;
+  gap: 1.5rem;
+}
+
+.correct-selections,
+.incorrect-selections {
+  padding: 1rem;
+  border-radius: 8px;
+}
+
+.correct-selections {
+  background: #d1fae5;
+  border: 1px solid #10b981;
+}
+
+.incorrect-selections {
+  background: #fee2e2;
+  border: 1px solid #ef4444;
+}
+
+.correct-selections h5,
+.incorrect-selections h5 {
+  font-size: 1rem;
+  font-weight: 600;
+  margin-bottom: 0.5rem;
+}
+
+.correct-selections h5 {
+  color: #065f46;
+}
+
+.incorrect-selections h5 {
+  color: #991b1b;
+}
+
+.correct-selections ul,
+.incorrect-selections ul {
+  margin: 0;
+  padding-left: 1.5rem;
+}
+
+.correct-selections li,
+.incorrect-selections li {
+  margin-bottom: 0.25rem;
+  font-size: 0.95rem;
+}
+
+.feedback-summary {
+  padding: 1rem;
+  background: white;
+  border-radius: 8px;
+  border: 1px solid #e2e8f0;
+}
+
+.feedback-summary p {
+  margin-bottom: 0.75rem;
+  font-size: 0.95rem;
+  color: #4a5568;
+}
+
+.feedback-summary p:last-child {
+  margin-bottom: 0;
+}
+
 .interactive-placeholder {
   padding: 2rem;
   background: #f8fafc;
@@ -293,6 +396,28 @@
   background: #fee2e2;
   color: #991b1b;
   border: 2px solid #ef4444;
+}
+
+.try-again-btn {
+  margin-top: 1rem;
+  padding: 0.75rem 1.5rem;
+  font-size: 1rem;
+  font-weight: 600;
+  color: white;
+  background: #ef4444;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.try-again-btn:hover {
+  background: #dc2626;
+  transform: translateY(-1px);
+}
+
+.try-again-btn:active {
+  transform: translateY(0);
 }
 
 /* Lesson Actions */

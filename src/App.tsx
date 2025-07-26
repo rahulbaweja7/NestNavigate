@@ -1,6 +1,7 @@
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom'
 import Navbar from './components/Navbar'
 import HomePage from './components/HomePage'
+import ModuleSelection from './components/ModuleSelection'
 import LearningModule from './components/LearningModule'
 import { useLocalStorage } from './hooks/useLocalStorage'
 import './styles/App.css'
@@ -25,9 +26,17 @@ function App() {
   return (
     <Router>
       <div className="app">
-        <Navbar userCoins={userCoins} />
+        <Navbar userCoins={userCoins} onResetProgress={resetProgress} />
         <Routes>
-          <Route path="/" element={<HomePage onResetProgress={resetProgress} />} />
+          <Route path="/" element={<HomePage />} />
+          <Route 
+            path="/modules" 
+            element={
+              <ModuleSelection 
+                completedLessons={completedLessons}
+              />
+            } 
+          />
           <Route 
             path="/module" 
             element={
