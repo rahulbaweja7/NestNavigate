@@ -2,10 +2,14 @@ import React from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import '../styles/Navbar.css';
 
-const Navbar: React.FC = () => {
+interface NavbarProps {
+  completedLessons?: number[];
+}
+
+const Navbar: React.FC<NavbarProps> = ({ completedLessons = [] }) => {
   const navigate = useNavigate();
   const location = useLocation();
-  const userCoins = 125; // Mock coin data
+  const userCoins = 0; // Mock coin data
 
   const handleLogoClick = () => { navigate('/'); };
   const handleModuleClick = () => { navigate('/module'); };
